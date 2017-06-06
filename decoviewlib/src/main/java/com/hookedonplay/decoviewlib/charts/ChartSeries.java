@@ -174,8 +174,9 @@ abstract public class ChartSeries {
 
         final boolean changeColors = event.isColorSet();
         if (changeColors) {
-            mColorAnimate = new ColorAnimate(mSeriesItem.getColor(), event.getColor());
-            mSeriesItem.setColor(event.getColor());
+//            mColorAnimate = new ColorAnimate(mSeriesItem.getColor(), event.getColor());
+            mColorAnimate = new ColorAnimate(mSeriesItem.getColors()[0], event.getColor());
+            mSeriesItem.setColor(event.getColor(), 0);
         }
         float position = event.getEndPosition();
 
@@ -271,7 +272,7 @@ abstract public class ChartSeries {
         mEventCurrent = null;
 
         if (mColorAnimate != null) {
-            mPaint.setColor(mSeriesItem.getColor());
+            mPaint.setColor(mSeriesItem.getColors()[0]);
             mColorAnimate = null;
         }
     }
@@ -339,8 +340,8 @@ abstract public class ChartSeries {
 
         final boolean changeColors = event.isColorSet();
         if (changeColors) {
-            mColorAnimate = new ColorAnimate(mSeriesItem.getColor(), event.getColor());
-            mSeriesItem.setColor(event.getColor());
+            mColorAnimate = new ColorAnimate(mSeriesItem.getColors()[0], event.getColor());
+            mSeriesItem.setColor(event.getColor(), 0);
         } else {
             Log.w(TAG, "Must set new color to start CHANGE_COLOR event");
             return;
@@ -445,7 +446,7 @@ abstract public class ChartSeries {
         mPercentComplete = 1.0f;
 
         mPaint = new Paint();
-        mPaint.setColor(mSeriesItem.getColor());
+        mPaint.setColor(mSeriesItem.getColors()[0]);
         mPaint.setStyle((mSeriesItem.getChartStyle() == SeriesItem.ChartStyle.STYLE_DONUT) ? Paint.Style.STROKE : Paint.Style.FILL);
         mPaint.setStrokeWidth(mSeriesItem.getLineWidth());
         mPaint.setStrokeCap(mSeriesItem.getRoundCap() ? Paint.Cap.ROUND : Paint.Cap.BUTT);
@@ -510,8 +511,8 @@ abstract public class ChartSeries {
 
         if (mColorAnimate != null) {
             mPaint.setColor(mColorAnimate.getColorCurrent(mPercentComplete));
-        } else if (mPaint.getColor() != getSeriesItem().getColor()) {
-            mPaint.setColor(getSeriesItem().getColor());
+        } else if (mPaint.getColor() != getSeriesItem().getColors()[0]) {
+            mPaint.setColor(getSeriesItem().getColors()[0]);
         }
 
         return false;
@@ -556,9 +557,9 @@ abstract public class ChartSeries {
         float lineWidth = mSeriesItem.getLineWidth();
         if (mPercentComplete > 0) {
             lineWidth *= (1.0f - mPercentComplete);
-            mPaint.setAlpha((int) (Color.alpha(mSeriesItem.getColor()) * (1.0f - mPercentComplete)));
+            mPaint.setAlpha((int) (Color.alpha(mSeriesItem.getColors()[0]) * (1.0f - mPercentComplete)));
         } else {
-            mPaint.setAlpha(Color.alpha(mSeriesItem.getColor()));
+            mPaint.setAlpha(Color.alpha(mSeriesItem.getColors()[0]));
         }
 
         mPaint.setStrokeWidth(lineWidth);

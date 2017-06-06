@@ -75,7 +75,7 @@ abstract public class ArcSeries extends ChartSeries {
      * Build a gradient if required. This must be executed every time the bounds changes
      */
     protected void applyGradientToPaint() {
-        if (Color.alpha(mSeriesItem.getSecondaryColor()) != 0) {
+        if (Color.alpha(mSeriesItem.getColors()[1]) != 0) {
             SweepGradient gradient;
             if (mAngleSweep < 360) {
                 /**
@@ -84,7 +84,7 @@ abstract public class ArcSeries extends ChartSeries {
                  * a fade the complete circumference. A matrix is rotated so the meeting of the
                  * two colors occurs in the middle of the gap when the part circle is not drawn
                  */
-                final int[] colors = {mSeriesItem.getColor(), mSeriesItem.getSecondaryColor()};
+                final int[] colors = mSeriesItem.getColors();
                 final float[] positions = {0, 1};
                 gradient = new SweepGradient(mBounds.centerX(), mBounds.centerY(), colors, positions);
                 Matrix gradientRotationMatrix = new Matrix();
@@ -95,8 +95,29 @@ abstract public class ArcSeries extends ChartSeries {
                  * Drawing a gradient around the complete circumference of the circle. This
                  * gradient fades gently between the two colors.
                  */
-                final int[] colors = {mSeriesItem.getSecondaryColor(), mSeriesItem.getColor(), mSeriesItem.getSecondaryColor()};
-                final float[] positions = {0, 0.5f * (mAngleSweep / 360f), 1};
+                final int[] colors = new int[mSeriesItem.getColors().length + 1];
+
+
+                for (int i = 0; i < colors.length; i++) {
+                    if (i == 0) {
+                        colors[i] = mSeriesItem.getColors()[mSeriesItem.getColors().length - 1];
+                    } else {
+                        colors[i] = mSeriesItem.getColors()[i - 1];
+                    }
+                }
+
+                final float[] positions = new float[colors.length];
+
+                for (int i = 0; i < positions.length; i++) {
+                    if (i == 0) {
+                        positions[i] = 0;
+                        continue;
+                    }
+
+                    float percent = ((float) i / (float) (positions.length - 1));
+                    positions[i] = percent * (mAngleSweep / 360f);
+                }
+
                 gradient = new SweepGradient(mBounds.centerX(), mBounds.centerY(), colors, positions);
             }
 

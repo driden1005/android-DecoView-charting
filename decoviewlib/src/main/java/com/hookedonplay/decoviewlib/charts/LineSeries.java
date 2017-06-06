@@ -23,6 +23,7 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.support.annotation.NonNull;
 import android.util.Log;
+
 import com.hookedonplay.decoviewlib.DecoView;
 
 public class LineSeries extends ChartSeries {
@@ -112,12 +113,12 @@ public class LineSeries extends ChartSeries {
      * Build a gradient if required. This must be executed every time the bounds changed
      */
     protected void applyGradientToPaint() {
-        if (Color.alpha(mSeriesItem.getSecondaryColor()) != 0) {
+        if (Color.alpha(mSeriesItem.getColors()[1]) != 0) {
             /**
              * Linear gradient is used for straight lines
              */
-            int colorOne = mSeriesItem.getSpinClockwise() ? mSeriesItem.getColor() : mSeriesItem.getSecondaryColor();
-            int colorTwo = mSeriesItem.getSpinClockwise() ? mSeriesItem.getSecondaryColor() : mSeriesItem.getColor();
+            int colorOne = mSeriesItem.getSpinClockwise() ? mSeriesItem.getColors()[0] : mSeriesItem.getColors()[1];
+            int colorTwo = mSeriesItem.getSpinClockwise() ? mSeriesItem.getColors()[1] : mSeriesItem.getColors()[0];
             LinearGradient gradient = new LinearGradient(mBounds.left, mBounds.top, mBounds.right, mBounds.bottom, colorOne, colorTwo, Shader.TileMode.CLAMP);
             mPaint.setShader(gradient);
         }

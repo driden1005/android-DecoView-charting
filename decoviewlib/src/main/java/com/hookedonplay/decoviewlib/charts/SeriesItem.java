@@ -38,14 +38,10 @@ import java.util.ArrayList;
 @SuppressWarnings("unused")
 public class SeriesItem {
     /**
-     * Main color of the arc
+     * The array of the colors that will be painted to the arc
      */
-    private int mColor;
-    /**
-     * Secondary Color of the arc used to create gradient for arc. This is only used if the
-     * alpha component is > 0
-     */
-    private int mColorSecondary;
+    private int[] mColors;
+
     /**
      * The width of the line used to draw the arc
      */
@@ -113,7 +109,7 @@ public class SeriesItem {
     /**
      * Set the shadow size for the series. This is drawn as a fade around the series that goes from
      * the color set mShadowColor and fades for mShadowSize pixels until it is transparent
-     *
+     * <p>
      * IMPORTANT: If you set this you need to call DecoView.disableHardwareAccelerationForDecoView()
      * as drawing of this shadow cannot be done with hardware acceleration enabled
      */
@@ -128,8 +124,7 @@ public class SeriesItem {
     private ArrayList<SeriesItemListener> mListeners;
 
     private SeriesItem(Builder builder) {
-        mColor = builder.mColor;
-        mColorSecondary = builder.mColorSecondary;
+        mColors = builder.mColors;
         mLineWidth = builder.mLineWidth;
         mSpinDuration = builder.mSpinDuration;
         mMinValue = builder.mMinValue;
@@ -149,20 +144,16 @@ public class SeriesItem {
         mShadowColor = builder.mShadowColor;
     }
 
-    public int getColor() {
-        return mColor;
+    public int[] getColors() {
+        return mColors;
     }
 
-    public void setColor(int color) {
-        mColor = color;
+    public void setColors(int[] colors) {
+        mColors = colors;
     }
 
-    public int getSecondaryColor() {
-        return mColorSecondary;
-    }
-
-    public void setSecondaryColor(int color) {
-        mColorSecondary = color;
+    public void setColor(int color, int index) {
+        mColors[index] = color;
     }
 
     public float getLineWidth() {
@@ -297,8 +288,7 @@ public class SeriesItem {
     }
 
     public static class Builder {
-        private int mColor = Color.argb(255, 32, 32, 32);
-        private int mColorSecondary = Color.argb(0, 0, 0, 0);
+        private int[] mColors = {Color.argb(255, 32, 32, 32), Color.argb(0, 0, 0, 0), Color.argb(0, 0, 0, 0), Color.argb(0, 0, 0, 0)};
         private float mLineWidth = -1;
         private long mSpinDuration = 5000;
         private float mMinValue;
@@ -318,12 +308,16 @@ public class SeriesItem {
         private int mShadowColor = Color.BLACK;
 
         public Builder(int color) {
-            mColor = color;
+            mColors[0] = color;
         }
 
         public Builder(int color, int colorSecondary) {
-            mColor = color;
-            mColorSecondary = colorSecondary;
+            mColors[0] = color;
+            mColors[1] = colorSecondary;
+        }
+
+        public Builder(int[] colors) {
+            mColors = colors;
         }
 
         public Builder setLineWidth(final float lineWidth) {
@@ -425,6 +419,7 @@ public class SeriesItem {
             mShadowColor = shadowColor;
             return this;
         }
+
         /**
          * Creates a {@link SeriesItem} with the arguments supplied to this builder.
          */
